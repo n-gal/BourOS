@@ -1,18 +1,19 @@
 ;===============BOUROS BOOT SECTOR PRINT=================
 ; Prints a string to the screen using BIOS interrupts
+; Input string registry: 'bx'
 ;========================================================
 
-print:
+Print:
     pusha
 
 ; keep this in mind:
 ; while (string[i] != 0) { print string[i]; i++ }
 
 ; the comparison for string end (null byte)
-start:
+Start:
     mov al, [bx] ; 'bx' is the base address for the string
     cmp al, 0 
-    je done
+    je Done
 
     ; the part where we print with the BIOS help
     mov ah, 0x0e
@@ -20,15 +21,15 @@ start:
 
     ; increment pointer and do next loop
     add bx, 1
-    jmp start
+    jmp Start
 
-done:
+Done:
     popa
     ret
 
 
 
-print_nl:
+PrintNL:
     pusha
     
     mov ah, 0x0e
