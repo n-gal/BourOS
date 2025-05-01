@@ -1,8 +1,9 @@
 ;================BOUROS BOOT SECTOR DISK=================
 ; Disk read function
+; Input disk count registry: 'dh'
+; Input segment offset registry: 'bx'
 ;========================================================
 
-; load 'dh' sectors from drive 'dl' into ES:BX
 DiskLoad:
     pusha
     ; reading from disk requires setting specific values in all registers
