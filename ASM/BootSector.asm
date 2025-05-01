@@ -5,32 +5,24 @@
 ; Memory offset from where the boot sector is located
 [org 0x7c00]
 
-; The main routine makes sure the parameters are ready and then calls the function
-
-mov bp, 0x8000 ; set the stack safely away from us
+mov bp, 0x9000 ; set the stack
 mov sp, bp
 
-mov bx, 0x9000 ; es:bx = 0x0000:0x9000 = 0x09000
-mov dh, 1 ; read 2 sectors
-call DiskLoad
 
-call WriteTitle
-call PrintNL
-mov bx, VERSION
-call Print
-call PrintNL
+mov bx, MSG_REAL_MODE
+call Print ; This will be written after the BIOS messages
 
-
-
-; that's it! we can hang now
-jmp $
+call SwitchToPM ; switch to protected mode
+jmp $ ; this will actually never be executed
 
 ; remember to include subroutines below the hang
 %include "ASM/BootSectorPrint.asm"
 %include "ASM/BootSectorPrintHex.asm"
 %include "ASM/BootSectorDisk.asm"
 %include "ASM/BootSectorSkipString.asm"
-
+%include "ASM/32BitPrint.asm"
+%include "ASM/32BitGDT.asm"
+%include "ASM/32BitSwitch.asm"
 WriteTitle:
     call PrintNL
     mov bx, 0x9000
@@ -54,7 +46,18 @@ TITLE:
     db 'Booting up...', 0
 
 VERSION:
-    db 'Ver 1.0', 0
+    db 'Ver 1.1', 0
+
+
+[bits 32]
+BeginPM: ; after the switch we will get here
+    mov ebx, MSG_PROT_MODE
+    call PrintStringPM ; Note that this will be written at the top left corner
+    jmp $
+
+
+MSG_REAL_MODE db "Started in 16-bit real mode", 0
+MSG_PROT_MODE db "Loaded 32-bit protected mode", 0
 
 ; padding and magic number
 times 510-($-$$) db 0

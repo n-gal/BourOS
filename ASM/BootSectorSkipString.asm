@@ -1,6 +1,7 @@
 ;============BOUROS BOOT SECTOR SKIP STRING==============
-; Prints a string to the screen using BIOS interrupts
-; Input string registry: 'bx'
+; Skips to the next string
+; Input string registry: 'bx' - position of the string
+; Output string registry: 'bx' - position of the next string
 ;========================================================
 
 SkipString:
