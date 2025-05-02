@@ -4,5 +4,13 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"makefile.launchConfigurations": [
+			{
+				"cwd": "c:\\Users\\galni\\Documents\\GitHub\\BourOS",
+				"binaryPath": "c:\\Users\\galni\\Documents\\GitHub\\BourOS\\format",
+				"binaryArgs": []
+			}
+		]
+	}
 }
