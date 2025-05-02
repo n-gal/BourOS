@@ -1,0 +1,17 @@
+/* This will force us to create a kernel entry function instead of jumping to kernel.c:0x00 */
+void dummy_test_entrypoint() {
+}
+
+void main() {
+
+    int greenOnBlack = 0x2;
+    char* video_memory = (char*) 0xb8000;
+    
+    *(video_memory + 1) = greenOnBlack;
+    *video_memory = 'X';
+
+
+    while (1) {
+        // Infinite loop to halt execution
+    }
+}

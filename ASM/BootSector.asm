@@ -4,6 +4,8 @@
 
 ; Memory offset from where the boot sector is located
 [org 0x7c00]
+KERNEL_OFFSET equ 0x1000 ; The same one we used when linking the kernel
+mov [BOOT_DRIVE], dl ; Remember that the BIOS sets us the boot drive in 'dl' on boot
 
 mov bp, 0x8000 ; set the stack
 mov sp, bp
@@ -16,7 +18,10 @@ call WriteTitle
 call PrintNL
 mov bx, MSG_REAL_MODE
 call Print ; This will be written after the BIOS messages
+call AwaitInput
+call PrintNL
 
+call LoadKernel ; read the kernel from the disk
 call SwitchToPM ; switch to protected mode
 jmp $ ; this will actually never be executed
 
@@ -26,27 +31,35 @@ jmp $ ; this will actually never be executed
 %include "ASM/BootSectorDisk.asm"
 %include "ASM/BootSectorSkipString.asm"
 %include "ASM/BootSectorTitle.asm"
+%include "ASM/BootSectorWaitInput.asm"
 %include "ASM/32BitPrint.asm"
 %include "ASM/32BitGDT.asm"
 %include "ASM/32BitSwitch.asm"
 
-; data
-TITLE:
-    db 'Booting up...', 0
 
-VERSION:
-    db 'Ver 1.1', 0
+[bits 16]
+LoadKernel:
+    mov bx, MSG_LOAD_KERNEL
+    call Print
+    call PrintNL
 
+    mov bx, KERNEL_OFFSET ; Read from disk and store in 0x1000
+    mov dh, 2
+    mov dl, [BOOT_DRIVE]
+    call DiskLoad
+    ret
 
 [bits 32]
 BeginPM: ; after the switch we will get here
     mov ebx, MSG_PROT_MODE
-    call PrintStringPM ; Note that this will be written at the top left corner
-    jmp $
+    call PrintStringPM
+    call KERNEL_OFFSET ; Give control to the kernel
+    jmp $ ; Stay here when the kernel returns control to us (if ever)
 
-
-MSG_REAL_MODE db "Started in 16-bit real mode", 0
-MSG_PROT_MODE db "Loaded 32-bit protected mode", 0
+BOOT_DRIVE db 0 ;
+MSG_REAL_MODE db "Started in 16-bit", 0
+MSG_PROT_MODE db "Landed in 32-bit Protected Mode", 0
+MSG_LOAD_KERNEL db "Loading kernel into memory", 0
 
 ; padding and magic number
 times 510-($-$$) db 0
