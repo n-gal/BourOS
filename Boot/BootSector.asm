@@ -26,15 +26,15 @@ call SwitchToPM ; switch to protected mode
 jmp $ ; this will actually never be executed
 
 ; remember to include subroutines below the hang
-%include "ASM/BootSectorPrint.asm"
-%include "ASM/BootSectorPrintHex.asm"
-%include "ASM/BootSectorDisk.asm"
-%include "ASM/BootSectorSkipString.asm"
-%include "ASM/BootSectorTitle.asm"
-%include "ASM/BootSectorWaitInput.asm"
-%include "ASM/32BitPrint.asm"
-%include "ASM/32BitGDT.asm"
-%include "ASM/32BitSwitch.asm"
+%include "Boot/BootSectorPrint.asm"
+%include "Boot/BootSectorPrintHex.asm"
+%include "Boot/BootSectorDisk.asm"
+%include "Boot/BootSectorSkipString.asm"
+%include "Boot/BootSectorTitle.asm"
+%include "Boot/BootSectorWaitInput.asm"
+%include "Boot/32BitPrint.asm"
+%include "Boot/32BitGDT.asm"
+%include "Boot/32BitSwitch.asm"
 
 
 [bits 16]
