@@ -29,6 +29,8 @@ GDTData:
 
 GDTEnd:
 
+
+
 ; GDT descriptor
 GDTDescriptor:
     dw GDTEnd - GDTStart - 1 ; size (16 bit), always one less of its true size

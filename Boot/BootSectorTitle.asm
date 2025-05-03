@@ -4,7 +4,7 @@
 WriteTitle:
     pusha
     call PrintNL
-    mov bx, 0x9000
+    mov bx, 0x7E00
     mov dh, 1
     call Print
     Loop: 

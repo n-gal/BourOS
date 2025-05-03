@@ -1,38 +1,42 @@
-#include "../Drivers/Ports.h"
+#include "../Drivers/Screen.h"
+#include "Util.h"
+
+#define VIDEO_MEMORY 0xb8000
+#define WHITE_ON_BLACK 0x0f
+
+
 
 void Main() {
-    
-    /* Screen cursor position: ask VGA control register (0x3d4) for bytes
-     * 14 = high byte of cursor and 15 = low byte of cursor. */
-    PortByteOut(0x3d4, 14); /* Requesting byte 14: high byte of cursor pos */
-    /* Data is returned in VGA data register (0x3d5) */
-    int position = PortByteIn(0x3d5);
-    position = position << 8; /* high byte */
 
-    PortByteOut(0x3d4, 15); /* requesting low byte */
-    position += PortByteIn(0x3d5);
+    ClearScreen();
 
-    /* VGA 'cells' consist of the character and its control data
-     * e.g. 'white on black background', 'red text on white bg', etc */
-    int offset_from_vga = position * 2;
+    const char* title =
+    "/$$$$$$$                                 /$$$$$$   /$$$$$$     \n"
+    "| $$__  $$                               /$$__  $$ /$$__  $$   \n"
+    "| $$  \\ $$  /$$$$$$  /$$   /$$  /$$$$$$ | $$  \\ $$| $$  \\__/   \n"
+    "| $$$$$$$  /$$__  $$| $$  | $$ /$$__  $$| $$  | $$|  $$$$$$    \n"
+    "| $$__  $$| $$  \\ $$| $$  | $$| $$  \\__/| $$  | $$ \\____  $$   \n"
+    "| $$  \\ $$| $$  | $$| $$  | $$| $$      | $$  | $$ /$$  \\ $$   \n"
+    "| $$$$$$$/|  $$$$$$/|  $$$$$$/| $$      |  $$$$$$/|  $$$$$$/   \n"
+    "|_______/  \\______/  \\______/ |__/       \\______/  \\______/    \n";
 
-    /* Now you can examine both variables using gdb, since we still
-     * don't know how to print strings on screen. Run 'make debug' and
-     * on the gdb console:
-     * breakpoint kernel.c:21
-     * continue
-     * print position
-     * print offset_from_vga
-     */
+    KPrintAt(title, 0, 0);
 
-    /* Let's write on the current cursor position, we already know how
-     * to do that */
-    char *vga = 0xb8000;
-    vga[offset_from_vga] = 'X'; 
-    vga[offset_from_vga+1] = 0x02; /* White text on black background */
-    
+    /*
+    int i = 0;
+    for (i = 0; i < 24; i++) {
+        char str[255];
+        IntToAscii(i, str);
+        KPrintAt(str, 0, i);
+    }
+
+    KPrintAt("This text forces the kernel to scroll. Row 0 will disappear. \n", 0, 24);
+    KPrint("And with this text, the kernel will scroll again, and row 1 will disappear too!");
+    */
+
     while(1)
     {
 
     }
+
 }

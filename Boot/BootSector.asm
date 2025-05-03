@@ -7,15 +7,9 @@
 KERNEL_OFFSET equ 0x1000 ; The same one we used when linking the kernel
 mov [BOOT_DRIVE], dl ; Remember that the BIOS sets us the boot drive in 'dl' on boot
 
-mov bp, 0x8000 ; set the stack
+mov bp, 0x9000 ; set the stack
 mov sp, bp
 
-mov bx, 0x9000
-mov dh, 1
-call DiskLoad
-call WriteTitle
-
-call PrintNL
 mov bx, MSG_REAL_MODE
 call Print ; This will be written after the BIOS messages
 call AwaitInput
@@ -44,7 +38,7 @@ LoadKernel:
     call PrintNL
 
     mov bx, KERNEL_OFFSET ; Read from disk and store in 0x1000
-    mov dh, 2
+    mov dh, 16
     mov dl, [BOOT_DRIVE]
     call DiskLoad
     ret
@@ -64,10 +58,3 @@ MSG_LOAD_KERNEL db "Loading kernel into memory", 0
 ; padding and magic number
 times 510-($-$$) db 0
 dw 0xaa55
-
-
-db '    ____                   ____  _____', 0
-db '   / __ )____  __  _______/ __ \/ ___/', 0
-db '  / __  / __ \/ / / / ___/ / / /\__ \ ', 0
-db ' / /_/ / /_/ / /_/ / /  / /_/ /___/ / ', 0
-db '/_____/\____/\__,_/_/   \____//____/  ', 0
