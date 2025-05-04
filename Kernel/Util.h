@@ -6,5 +6,7 @@
 void MemoryCopy(char *source, char *dest, int nbytes);
 void MemorySet(u8 *dest, u8 val, u32 len);
 void IntToAscii(int n, char str[]);
+void Reverse(char s[]);
+int StrLen(char s[]);
 
 #endif

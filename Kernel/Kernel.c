@@ -1,7 +1,8 @@
 #include "../Drivers/Screen.h"
+#include "../Drivers/Keyboard.h"
 #include "Util.h"
 #include "../Cpu/Isr.h"
-#include "../Cpu/Idt.h"
+#include "../Cpu/Timer.h"
 
 #define VIDEO_MEMORY 0xb8000
 #define WHITE_ON_BLACK 0x0f
@@ -10,6 +11,7 @@
 
 void Main() {
 
+    IsrInstall();
     ClearScreen();
 
     const char* title =
@@ -25,12 +27,9 @@ void Main() {
     KPrintAt(title, 10, 0, GREEN_ON_BLACK);
     KPrintAt("Ver     1.0\n", 10, -1, GREEN_ON_BLACK);
 
-    IsrInstall();
-    /* Test the interrupts */
-    __asm__ __volatile__("int $2");
-    __asm__ __volatile__("int $3");
-
-
+    asm volatile("sti");
+    //InitTimer(5);
+    InitKeyboard();
     /*
     int i = 0;
     for (i = 0; i < 24; i++) {

@@ -26,5 +26,22 @@ void IntToAscii(int n, char str[]) {
     if (sign < 0) str[i++] = '-';
     str[i] = '\0';
 
-    /* TODO: implement "reverse" */
+    Reverse(str);
+}
+
+/* K&R */
+void Reverse(char s[]) {
+    int c, i, j;
+    for (i = 0, j = StrLen(s)-1; i < j; i++, j--) {
+        c = s[i];
+        s[i] = s[j];
+        s[j] = c;
+    }
+}
+
+/* K&R */
+int StrLen(char s[]) {
+    int i = 0;
+    while (s[i] != '\0') ++i;
+    return i;
 }
