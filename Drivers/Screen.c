@@ -5,7 +5,7 @@
 /* Declaration of private functions */
 int GetCursorOffset();
 void SetCursorOffset(int offset);
-int PrintChar(char c, int col, int row, char attr);
+int PrintChar(char c, int col, int row, char attr, int startCol, int lastChar);
 int GetOffset(int col, int row);
 int GetOffsetRow(int offset);
 int GetOffsetCol(int offset);
@@ -19,30 +19,43 @@ int GetOffsetCol(int offset);
  * If col, row, are negative, we will use the current offset
  */
 
-void KPrintAt(char *message, int col, int row) {
+void KPrintAt(char *message, int col, int row, char attr) {
     /* Set cursor if col/row are negative */
+    int startCol = col;
     int offset;
     if (col >= 0 && row >= 0)
         offset = GetOffset(col, row);
     else {
-        offset = GetCursorOffset();
-        row = GetOffsetRow(offset);
-        col = GetOffsetCol(offset);
+        if(col >= 0) {
+            row = GetOffsetRow(GetCursorOffset());
+            offset = GetOffset(col, row);
+        } else if (row >= 0) {
+            col = GetOffsetCol(GetCursorOffset());
+            offset = GetOffset(col, row);
+        } else{
+            offset = GetCursorOffset();
+            row = GetOffsetRow(offset);
+            col = GetOffsetCol(offset);
+        }
     }
 
     /* Loop through message and print it */
     int i = 0;
+    int lastChar = 0;
     while (message[i] != 0) {
-        offset = PrintChar(message[i++], col, row, GREEN_ON_BLACK);
+        if(message[i + 1] == 0)
+            lastChar = 1;
+        offset = PrintChar(message[i++], col, row, attr, startCol, lastChar);
         /* Compute row/col for next iteration */
         row = GetOffsetRow(offset);
         col = GetOffsetCol(offset);
     }
 }
 
-void KPrint(char *message) {
-    KPrintAt(message, -1, -1);
+void KPrint(char *message, char attr) {
+    KPrintAt(message, -1, -1, attr);
 }
+
 
 /**********************************************************
  * Private kernel functions                               *
@@ -58,7 +71,7 @@ void KPrint(char *message) {
  * Sets the video cursor to the returned offset
  */
 
-int PrintChar(char c, int col, int row, char attr) {
+int PrintChar(char c, int col, int row, char attr, int startCol, int lastChar) {
     unsigned char *vidmem = (unsigned char*) VIDEO_ADDRESS;
     if (!attr) attr = WHITE_ON_BLACK;
 
@@ -74,8 +87,11 @@ int PrintChar(char c, int col, int row, char attr) {
     else offset = GetCursorOffset();
 
     if (c == '\n') {
-        row = GetOffsetRow(offset);
-        offset = GetOffset(0, row+1);
+        row = GetOffsetRow(offset) + 1; // Move to the next row
+        if(startCol >= 0 && lastChar == 0)
+            offset = GetOffset(startCol, row);
+        else
+            offset = GetOffset(0, row); // Move to the first column of the next row
     } else {
         vidmem[offset] = c;
         vidmem[offset+1] = attr;

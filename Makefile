@@ -1,12 +1,13 @@
-C_SOURCES = $(wildcard Kernel/*.c Drivers/*.c)
-HEADERS = $(wildcard Kernel/*.h Drivers/*.h)
+C_SOURCES = $(wildcard Kernel/*.c Drivers/*.c Cpu/*.c)
+HEADERS = $(wildcard Kernel/*.h Drivers/*.h Cpu/*.h)
 
 # Nice syntax for file extension replacement
-OBJ = ${C_SOURCES:.c=.o}
+OBJ = ${C_SOURCES:.c=.o Cpu/Interrupt.o}
 
 # Change this if your cross-compiler is somewhere else
 #CC = /usr/local/i386elfgcc/bin/i386-elf-gcc
 #GDB = /usr/local/i386elfgcc/bin/i386-elf-gdb
+
 # -g: Use debugging symbols in gcc
 CFLAGS = -g
 
@@ -39,4 +40,4 @@ run: os-image.bin
 
 clean:
 	rm -rf *.bin *.dis *.o os-image.bin *.elf
-	rm -rf Kernel/*.o Boot/*.bin Drivers/*.o boot/*.o
+	rm -rf Kernel/*.o Boot/*.bin Drivers/*.o Boot/*.o  Cpu/*.o
