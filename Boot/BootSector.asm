@@ -46,7 +46,7 @@ LoadKernel:
     call PrintNL
 
     mov bx, KERNEL_OFFSET ; Read from disk and store in 0x1000
-    mov dh, 32
+    mov dh, 50
     mov dl, [BOOT_DRIVE]
     call DiskLoad
     ret

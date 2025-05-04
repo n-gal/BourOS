@@ -1,6 +1,6 @@
 #include "Screen.h"
-#include "Ports.h"
-#include "../Kernel/Util.h"
+#include "../Cpu/Ports.h"
+#include "../Libc/Mem.h"
 
 /* Declaration of private functions */
 int GetCursorOffset();
@@ -56,6 +56,14 @@ void KPrint(char *message, char attr) {
     KPrintAt(message, -1, -1, attr);
 }
 
+void KPrintBackspace() {
+    int offset = GetCursorOffset() - 2;
+    int row = GetOffsetRow(offset);
+    int col = GetOffsetCol(offset);
+    PrintChar(' ', col, row, GREEN_ON_BLACK, col, 1);
+    SetCursorOffset(offset);
+}
+
 
 /**********************************************************
  * Private kernel functions                               *
@@ -77,7 +85,7 @@ int PrintChar(char c, int col, int row, char attr, int startCol, int lastChar) {
 
     /* Error control: print a red 'E' if the coords aren't right */
     if (col >= MAX_COLS || row >= MAX_ROWS) {
-        vidmem[2*(MAX_COLS)*(MAX_ROWS)-2] = 'E';
+        vidmem[2*(MAX_COLS)*(MAX_ROWS)-2] = 'E'; // Use the first character of the string
         vidmem[2*(MAX_COLS)*(MAX_ROWS)-1] = RED_ON_WHITE;
         return GetOffset(col, row);
     }

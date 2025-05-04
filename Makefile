@@ -1,5 +1,5 @@
-C_SOURCES = $(wildcard Kernel/*.c Drivers/*.c Cpu/*.c)
-HEADERS = $(wildcard Kernel/*.h Drivers/*.h Cpu/*.h)
+C_SOURCES = $(wildcard Kernel/*.c Drivers/*.c Cpu/*.c Libc/*.c)
+HEADERS = $(wildcard Kernel/*.h Drivers/*.h Cpu/*.h Libc/*.h)
 
 # Nice syntax for file extension replacement
 OBJ = ${C_SOURCES:.c=.o Cpu/Interrupt.o}

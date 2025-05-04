@@ -1,6 +1,6 @@
 #include "../Drivers/Screen.h"
 #include "../Drivers/Keyboard.h"
-#include "Util.h"
+#include "../Libc/string.h"
 #include "../Cpu/Isr.h"
 #include "../Cpu/Timer.h"
 
@@ -13,6 +13,8 @@ void Main() {
 
     IsrInstall();
     ClearScreen();
+    asm volatile("sti");
+    InitKeyboard();
 
     const char* title =
     "/$$$$$$$                                 /$$$$$$   /$$$$$$     \n"
@@ -26,25 +28,22 @@ void Main() {
 
     KPrintAt(title, 10, 0, GREEN_ON_BLACK);
     KPrintAt("Ver     1.0\n", 10, -1, GREEN_ON_BLACK);
-
-    asm volatile("sti");
-    //InitTimer(5);
-    InitKeyboard();
-    /*
-    int i = 0;
-    for (i = 0; i < 24; i++) {
-        char str[255];
-        IntToAscii(i, str);
-        KPrintAt(str, 0, i);
-    }
-
-    KPrintAt("This text forces the kernel to scroll. Row 0 will disappear. \n", 0, 24);
-    KPrint("And with this text, the kernel will scroll again, and row 1 will disappear too!");
-    */
+    KPrint("> ", GREEN_ON_BLACK);
 
     while(1)
     {
 
     }
 
+}
+
+
+void UserInput(char *input) {
+    if (StrCmp(input, "END") == 0) {
+        KPrint("Stopping the CPU. Bye!\n", GREEN_ON_BLACK);
+        asm volatile("hlt");
+    }
+    KPrint("You said: ", GREEN_ON_BLACK);
+    KPrint(input, GREEN_ON_BLACK);
+    KPrint("\n> ", GREEN_ON_BLACK);
 }

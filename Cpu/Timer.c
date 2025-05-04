@@ -1,18 +1,12 @@
 #include "Timer.h"
-#include "../Drivers/Screen.h"
-#include "../Kernel/Util.h"
 #include "Isr.h"
+#include "../Libc/Function.h"
 
 u32 tick = 0;
 
 static void TimerCallback(registers_t regs) {
     tick++;
-    KPrint("Tick: ", GREEN_ON_BLACK);
-    
-    char tickAscii[256];
-    IntToAscii(tick, tickAscii);
-    KPrint(tickAscii, GREEN_ON_BLACK);
-    KPrint("\n", GREEN_ON_BLACK);
+    UNUSED(regs);
 }
 
 void InitTimer(u32 freq) {
