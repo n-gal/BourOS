@@ -17,6 +17,14 @@ void IntToAscii(int n, char str[]) {
     Reverse(str);
 }
 
+int AsciiToInt(const char *s) {
+    int value = 0;
+    for (int i = 0; s[i] >= '0' && s[i] <= '9'; i++) {
+        value = value * 10 + (s[i] - '0');
+    }
+    return value;
+}
+
 /* K&R */
 void Reverse(char s[]) {
     int c, i, j;
@@ -58,4 +66,51 @@ int StrCmp(char s1[], char s2[]) {
         if (s1[i] == '\0') return 0;
     }
     return s1[i] - s2[i];
+}
+
+void StrCat(char *dest, const char *src, int destBufSize){
+    int destLen = StrLen(dest);
+    int srcLen = StrLen(src);
+    if (destLen + srcLen + 1 > destBufSize)
+        return;
+
+    for(int i = 0; i < StrLen(src); i ++){
+        dest[destLen + i] = src[i];
+    }
+}
+
+void CommandSeparate(char string[], char *command, char *args){
+    int foundSpace = 0;
+    int spaceIndex = 0;
+    for(int i = 0; i < StrLen(string); i++){
+        if(string[i] == ' ' && foundSpace == 0){
+            foundSpace = 1;
+            spaceIndex = i;
+            for(int j = 0; j < i; j++){
+                command[j] = string[j];
+            }
+            command[i] = '\0';
+        }
+        if(foundSpace)
+        {
+            args[i - spaceIndex - 1] = string[i];
+            if(i == StrLen(string) - 1){
+                args[i - spaceIndex] = '\0';
+            }
+        }
+    }
+    if(foundSpace == 0)
+    {
+        StrCopy(command, string);
+        args[0] = '\0';
+    }
+}
+
+void StrCopy(char *dest, char *src) {
+    int i = 0;
+    while (src[i] != '\0') {
+        dest[i] = src[i];
+        i++;
+    }
+    dest[i] = '\0';
 }

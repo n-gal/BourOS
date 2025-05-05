@@ -2,6 +2,8 @@
 #include "../Cpu/Ports.h"
 #include "../Libc/Mem.h"
 
+targColor = GREEN_ON_BLACK;
+
 /* Declaration of private functions */
 int GetCursorOffset();
 void SetCursorOffset(int offset);
@@ -139,6 +141,8 @@ int GetCursorOffset() {
 
 void SetCursorOffset(int offset) {
     /* Similar to GetCursorOffset, but instead of reading we write data */
+    unsigned char *vidmem = (unsigned char*) VIDEO_ADDRESS;
+    vidmem[offset+1] = targColor;
     offset /= 2;
     
     PortByteOut(REG_SCREEN_CTRL, 14);
@@ -158,6 +162,14 @@ void ClearScreen() {
         screen[i*2+1] = WHITE_ON_BLACK;
     }
     SetCursorOffset(GetOffset(0, 0));
+}
+
+void SetAllTextColor(u8 attr){
+    unsigned char *vidmem = (unsigned char*) VIDEO_ADDRESS;
+    //uint16_t colorMask = (attr << 8);
+    for (int i = 0; i < MAX_ROWS * MAX_COLS; i++) {
+        vidmem[i * 2 + 1] = attr;
+    }
 }
 
 int GetOffset(int col, int row) { return 2 * (row * MAX_COLS + col); }

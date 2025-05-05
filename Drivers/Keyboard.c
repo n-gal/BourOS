@@ -34,7 +34,7 @@ static void KeyboardCallback(registers_t regs) {
         if(canBackspace)
             KPrintBackspace();
     } else if (scancode == ENTER) {
-        KPrint("\n", GREEN_ON_BLACK);
+        KPrint("\n", targColor);
         UserInput(keyBuffer); /* kernel-controlled function */
         keyBuffer[0] = '\0';
     } else {
@@ -42,7 +42,7 @@ static void KeyboardCallback(registers_t regs) {
         /* Remember that kprint only accepts char[] */
         char str[2] = {letter, '\0'};
         Append(keyBuffer, letter);
-        KPrint(str, GREEN_ON_BLACK);
+        KPrint(str, targColor);
     }
     UNUSED(regs);
 }

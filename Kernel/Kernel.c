@@ -1,3 +1,4 @@
+#include "CommandParser.h"
 #include "../Drivers/Screen.h"
 #include "../Drivers/Keyboard.h"
 #include "../Libc/string.h"
@@ -39,11 +40,9 @@ void Main() {
 
 
 void UserInput(char *input) {
-    if (StrCmp(input, "END") == 0) {
-        KPrint("Stopping the CPU. Bye!\n", GREEN_ON_BLACK);
-        asm volatile("hlt");
-    }
-    KPrint("You said: ", GREEN_ON_BLACK);
-    KPrint(input, GREEN_ON_BLACK);
-    KPrint("\n> ", GREEN_ON_BLACK);
+    char cmd[256];
+    char args[256];
+    CommandSeparate(input, cmd, args);
+    ParseCommand(cmd, args);
+    KPrint("> ", targColor);
 }
