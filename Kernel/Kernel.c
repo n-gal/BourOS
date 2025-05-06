@@ -27,10 +27,9 @@ void Main() {
     "| $$$$$$$/|  $$$$$$/|  $$$$$$/| $$      |  $$$$$$/|  $$$$$$/   \n"
     "|_______/  \\______/  \\______/ |__/       \\______/  \\______/    \n\n";
 
-    KPrintAt(title, 10, 0, GREEN_ON_BLACK);
-    KPrintAt("Ver     1.0\n", 10, -1, GREEN_ON_BLACK);
-    KPrint("> ", GREEN_ON_BLACK);
-
+    KPrintAt(title, 10, 0, targColor);
+    KPrintAt("Ver     1.0\n", 10, -1, targColor);
+    KPrint("> ", targColor);
     while(1)
     {
 

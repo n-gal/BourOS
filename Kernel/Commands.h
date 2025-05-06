@@ -7,5 +7,6 @@
 void CMHelp(char* command, char* args);
 void CMClear(char* command, char* args);
 void CMColor(char* command, char* args);
+void CMSetLayout(char* command, char* args);
 
 #endif

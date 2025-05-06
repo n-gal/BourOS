@@ -58,14 +58,37 @@ int Backspace(char s[]) {
     return 0;
 }
 
-/* K&R 
- * Returns <0 if s1<s2, 0 if s1==s2, >0 if s1>s2 */
+void ToLowerCase(char s[]) {
+    for (int i = 0; s[i] != '\0'; i++) {
+        if (s[i] >= 'A' && s[i] <= 'Z') {
+            s[i] += 32;
+        }
+    }
+}
+
 int StrCmp(char s1[], char s2[]) {
     int i;
     for (i = 0; s1[i] == s2[i]; i++) {
         if (s1[i] == '\0') return 0;
     }
     return s1[i] - s2[i];
+}
+
+int StrCmpCI(char s1[], char s2[]) {
+    int i;
+
+    char s1l[255];
+    StrCopy(s1l, s1);
+    ToLowerCase(s1l);
+
+    char s2l[255];
+    StrCopy(s2l, s2);
+    ToLowerCase(s2l);
+
+    for (i = 0; s1l[i] == s2l[i]; i++) {
+        if (s1l[i] == '\0') return 0;
+    }
+    return s1l[i] - s2l[i];
 }
 
 void StrCat(char *dest, const char *src, int destBufSize){
